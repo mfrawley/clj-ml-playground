@@ -1,10 +1,10 @@
 (ns myreagent.ml)
 
 (def theta0 0.5)
-(def theta1 5.9)
+(def theta1 2.1)
 
 ; Training set is simple straight line parallel to x-axis
-(def training-data [[10.0 20.0], [20.0 40.0], [40.0 80.0], [80.0 160.0]])
+(def training-data [[10.0 20.0], [20.0 40.0], [40.0 80.0], [80.0 160.0], [90.0 190.0]])
 
 (defn square [x]
   (* x x))

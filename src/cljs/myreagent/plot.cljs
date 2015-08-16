@@ -61,9 +61,14 @@
   	(.closePath ctx)
   	(.fill ctx)))
 
+(defn translate-point [point chart]
+  "Inverts the rendering origin to the bottom-left (Cartesian coords)"
+  (let [[x y] point]
+    [x (- chart.height y)]))
+
 (defn draw-point [pos chart]
   (s/validate Chart chart)
-  (draw-object {:type :circle :color "#000000" :size 1.5 :pos pos} chart.context)
+  (draw-object {:type :circle :color "#000000" :size 1.5 :pos (translate-point pos chart)} chart.context)
   )
 
 (defn draw-all-points [data chart]
@@ -88,13 +93,44 @@
     (print (aget ctx "strokeStyle"))
     (.stroke ctx)))
 
+(defn draw-line [color data chart]
+  (s/validate Chart chart)
+  (s/validate js/String color)
+
+  (let [
+    adjusted-posns (mapv (fn [pos] (translate-point pos chart)) data)
+    ; [startx starty] (first adjusted-posns)
+    ctx chart.context
+    ]
+
+    (print adjusted-posns)
+    ;Move to new origin
+    (.beginPath ctx)
+
+    (.moveTo ctx 0 chart.height)
+
+    (let [[last-x last-y]  (last adjusted-posns)]
+    (print (str last-x last-y))
+      (.lineTo ctx last-x last-y))
+    ; (.lineTo ctx 100 0)
+    ; (.moveTo ctx startx starty)
+    ; (doseq [[x y] adjusted-posns]
+    ;   (.lineTo ctx x y))
+    ; (.closePath ctx)
+    (aset ctx "lineWidth" 1.5)
+    (aset ctx "strokeStyle" color)
+    (.stroke ctx)
+
+    ))
+
 (defn clear-canvas
   "Clears the canvas"
   [ctx width height]
-  (.save ctx)
-  (.setTransform ctx 1 0 0 1 0 0)
+  ; (.save ctx)
+  ; (.setTransform ctx 1 0 0 1 0 0)
   (.clearRect ctx 0 0 width height)
-  (.restore ctx))
+  ; (.restore ctx)
+  )
 
 (defn draw-scene
   "Draws a sequence of objects to the screen.
@@ -110,17 +146,10 @@
   (doseq [obj objs]
     (draw-object obj ctx)))
 
-(defn drawline [data color chart]
-  (s/validate js/String color)
+(defn draw-black-line [data chart]
   (s/validate Chart chart)
+  (draw-line "#000000" data chart))
 
-  (draw-object {:type :line :color color :width 1 :posns data} chart.context)
-  )
-
-(defn drawblackline [data chart]
+(defn draw-red-line [data chart]
   (s/validate Chart chart)
-  (drawline data "#000000" chart))
-
-(defn drawredline [data chart]
-  (s/validate Chart chart)
-  (drawline data "#ff0000" chart))
+  (draw-line "#ff0000" data chart))

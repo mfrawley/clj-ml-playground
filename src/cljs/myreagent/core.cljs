@@ -52,7 +52,9 @@
        width (:width canvas-data)
        height (:height canvas-data)
        chart (plot/make-chart width height ctx)]
-  (plot/drawredline (ml/hypothesis-line ml/training-data) chart)
+
+  (plot/clear-canvas ctx width height)
+  (plot/draw-red-line (ml/hypothesis-line ml/training-data) chart)
   (plot/draw-all-points ml/training-data chart)
   ))
 
