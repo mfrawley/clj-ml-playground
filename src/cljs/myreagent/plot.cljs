@@ -1,7 +1,7 @@
 (ns myreagent.plot
   (:require [schema.core :as s
-           :include-macros true ;; cljs only
-           ]))
+             :include-macros true])) ;; cljs only
+
 
 (deftype Chart [width height context])
 
@@ -9,8 +9,8 @@
   (s/validate s/Int width)
   (s/validate s/Int height)
   (s/validate js/CanvasRenderingContext2D ctx)
-  (Chart. width height ctx)
-  )
+  (Chart. width height ctx))
+
 ;; Draw stuff (and never care about ie ever)
 ;; There's obviously a ton this lib doesn't do, just adding what
 ;; I need when I need it.
@@ -46,8 +46,8 @@
 (defmethod draw-object :rectangle [{:keys [color pos size]} ctx]
   (let [[x y] pos
         [w h] size]
-  (aset ctx "fillStyle" (apply to-color color))
-  (.fillRect ctx x y w h)))
+   (aset ctx "fillStyle" (apply to-color color))
+   (.fillRect ctx x y w h)))
 
 (def twopi (* 2 (.-PI js/Math)))
 
@@ -55,11 +55,11 @@
   (s/validate js/CanvasRenderingContext2D ctx)
   (s/validate js/String color)
   (let [[x y] pos]
-  	(aset ctx "fillStyle" color)
-  	(.beginPath ctx)
-  	(.arc ctx x y size 0 twopi)
-  	(.closePath ctx)
-  	(.fill ctx)))
+    (aset ctx "fillStyle" color)
+    (.beginPath ctx)
+    (.arc ctx x y size 0 twopi)
+    (.closePath ctx)
+    (.fill ctx)))
 
 (defn translate-point [point chart]
   "Inverts the rendering origin to the bottom-left (Cartesian coords)"
@@ -68,8 +68,8 @@
 
 (defn draw-point [pos chart]
   (s/validate Chart chart)
-  (draw-object {:type :circle :color "#000000" :size 1.5 :pos (translate-point pos chart)} chart.context)
-  )
+  (draw-object {:type :circle :color "#000000" :size 1.5 :pos (translate-point pos chart)} chart.context))
+
 
 (defn draw-all-points [data chart]
   (s/validate Chart chart)
@@ -98,10 +98,10 @@
   (s/validate js/String color)
 
   (let [
-    adjusted-posns (mapv (fn [pos] (translate-point pos chart)) data)
+        adjusted-posns (mapv (fn [pos] (translate-point pos chart)) data)
     ; [startx starty] (first adjusted-posns)
-    ctx chart.context
-    ]
+        ctx chart.context]
+
 
     (print adjusted-posns)
     ;Move to new origin
@@ -110,8 +110,8 @@
     (.moveTo ctx 0 chart.height)
 
     (let [[last-x last-y]  (last adjusted-posns)]
-    (print (str last-x last-y))
-      (.lineTo ctx last-x last-y))
+     (print (str last-x last-y))
+     (.lineTo ctx last-x last-y))
     ; (.lineTo ctx 100 0)
     ; (.moveTo ctx startx starty)
     ; (doseq [[x y] adjusted-posns]
@@ -119,18 +119,18 @@
     ; (.closePath ctx)
     (aset ctx "lineWidth" 1.5)
     (aset ctx "strokeStyle" color)
-    (.stroke ctx)
+    (.stroke ctx)))
 
-    ))
+
 
 (defn clear-canvas
   "Clears the canvas"
   [ctx width height]
   ; (.save ctx)
   ; (.setTransform ctx 1 0 0 1 0 0)
-  (.clearRect ctx 0 0 width height)
+  (.clearRect ctx 0 0 width height))
   ; (.restore ctx)
-  )
+
 
 (defn draw-scene
   "Draws a sequence of objects to the screen.

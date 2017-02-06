@@ -18,9 +18,9 @@
                  [compojure "1.4.0"]
                  [hiccup "1.0.5"]
                  [environ "1.0.0"]
-                 [org.clojure/clojurescript "0.0-3308" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.228"]
                  [secretary "1.2.3"]
-                 [prismatic/schema "0.4.3"]]
+                 [prismatic/schema "1.0.4"]]
 
   :plugins [[lein-environ "1.0.0"]
             [lein-asset-minifier "0.2.2"]]
@@ -49,17 +49,18 @@
                                         :optimizations :none
                                         :pretty-print  true}}}}
 
-  :profiles {:dev {:repl-options {:init-ns myreagent.repl
+  :profiles {:dev
+              {:repl-options {:init-ns myreagent.repl
                                   :nrepl-middleware []}
 
                    :dependencies [[ring/ring-mock "0.2.0"]
                                   [ring/ring-devel "1.4.0"]
-                                  [lein-figwheel "0.3.7"]
+                                  [lein-figwheel "0.5.0-3"]
                                   [org.clojure/tools.nrepl "0.2.10"]
                                   [pjstadig/humane-test-output "0.7.0"]]
 
                    :source-paths ["env/dev/clj"]
-                   :plugins [[lein-figwheel "0.3.7"]
+                   :plugins [[lein-figwheel "0.5.0-3"]
                              [lein-cljsbuild "1.0.6"]]
 
                    :injections [(require 'pjstadig.humane-test-output)
@@ -71,13 +72,13 @@
                               :css-dirs ["resources/public/css"]
                               :ring-handler myreagent.handler/app}
 
-                   :env {:dev true}
+                   :env {:dev true}}
 
-                   :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
+             :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
                                               :compiler {:main "myreagent.dev"
-                                                         :source-map true}}
-}
-}}
+                                                         :source-map true}}}}
+
+
 
              :uberjar {:hooks [leiningen.cljsbuild minify-assets.plugin/hooks]
                        :env {:production true}

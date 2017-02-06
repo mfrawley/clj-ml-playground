@@ -14,12 +14,10 @@
 
 (defn hypothesis-func [x theta0 theta1]
   (+ theta0 (* theta1 x)))
-; (defn hypothesis-func [x theta0 theta1]
-;   (* theta1 x))
 
 (defn sq-error [tuple theta0 theta1]
   (let [[x y] tuple]
-  (square (- (hypothesis-func x theta0 theta1) y))))
+   (square (- (hypothesis-func x theta0 theta1) y))))
 
 (defn hypothesis-line [data]
     (mapv
@@ -32,11 +30,11 @@
   (let [m (count data)]
     (try
       (/ 1 (* (* 2 m)
-        (sum
-          (mapv
-            (fn [tuple]
-              (sq-error tuple theta0 theta1))
-            data))))
-            (catch js/Error e
+            (sum
+              (mapv
+                (fn [tuple]
+                  (sq-error tuple theta0 theta1))
+                data))))
+      (catch js/Error e
               ; (println e)
-              0))))
+        0))))
